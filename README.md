@@ -13,6 +13,8 @@ A library with generic data structures for common collection operations.
 
 ## Overview
 
+`collections.OrderedSet` a set of values where the insertion order is preserved
+
 `collections.TaggedValue` a set of tags associated with a value
 
 `collections.TaggedValueSet` provides methods for performing set operations on an arbitrary set of tagged values
