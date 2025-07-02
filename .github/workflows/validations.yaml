@@ -5,6 +5,9 @@ on:
       - main
   pull_request:
 
+permissions:
+  contents: read  # Needed for checkout
+
 jobs:
 
   Static-Analysis:
@@ -12,6 +15,8 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac #v4.0.0
+      with:
+        persist-credentials: false
 
     - name: Bootstrap environment
       uses: ./.github/actions/bootstrap
@@ -24,6 +29,8 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac #v4.0.0
+        with:
+          persist-credentials: false
 
       - name: Bootstrap environment
         uses: ./.github/actions/bootstrap
