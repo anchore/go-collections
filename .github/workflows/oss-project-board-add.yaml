@@ -8,6 +8,9 @@ on:
       - transferred
       - labeled
 
+permissions:
+  issues: read  # Needed to read issue data for project board
+
 jobs:
 
   run:
