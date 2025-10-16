@@ -6,6 +6,44 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+func Test_TaggedInterfaces(t *testing.T) {
+	type t1 struct {
+		name  string
+		field []string // not comparable
+	}
+
+	a := []string{"a"}
+	b := []string{"b"}
+	c := []string{"c"}
+	set1 := TaggedValueSet[any]{TaggedValue[any]{Value: t1{name: "a"}, Tags: a}, TaggedValue[any]{Value: t1{name: "b"}, Tags: b}}
+	set2 := TaggedValueSet[any]{TaggedValue[any]{Value: t1{name: "c"}, Tags: c}}
+
+	s := set2.Join(set2...)
+	require.Len(t, s, 1)
+
+	s = set1.Join(set2...)
+	require.Len(t, s, 3)
+
+	s = s.Join(set1...).Join(set2...)
+	require.Len(t, s, 3)
+}
+
+func Test_TaggedFuncs(t *testing.T) {
+	a := func() {}
+	b := func() {}
+	set1 := TaggedValueSet[any]{TaggedValue[any]{Value: a}}
+	set2 := TaggedValueSet[any]{TaggedValue[any]{Value: b}}
+
+	s := set2.Join(set2...)
+	require.Len(t, s, 1)
+
+	s = set1.Join(set2...)
+	require.Len(t, s, 2)
+
+	s = s.Join(set1...).Join(set2...)
+	require.Len(t, s, 2)
+}
+
 func Test_Tagged(t *testing.T) {
 	set := TaggedValueSet[int]{
 		NewTaggedValue(1, "one"),
