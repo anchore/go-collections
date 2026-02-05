@@ -8,7 +8,7 @@ type Set[T comparable] map[T]struct{}
 
 // NewSet creates a new set and adds all the items
 func NewSet[T comparable](items ...T) Set[T] {
-	s := Set[T]{}
+	s := make(Set[T], len(items))
 	s.Add(items...)
 	return s
 }
