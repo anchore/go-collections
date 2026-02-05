@@ -20,23 +20,9 @@ func (s Set[T]) Add(items ...T) {
 	}
 }
 
-// AddAll adds all items from the other set
-func (s Set[T]) AddAll(items Set[T]) {
-	for item := range items {
-		s[item] = struct{}{}
-	}
-}
-
 // Remove removes the items from the set
 func (s Set[T]) Remove(items ...T) {
 	for _, item := range items {
-		delete(s, item)
-	}
-}
-
-// RemoveAll removes all items from the other set
-func (s Set[T]) RemoveAll(items Set[T]) {
-	for item := range items {
 		delete(s, item)
 	}
 }
@@ -45,16 +31,6 @@ func (s Set[T]) RemoveAll(items Set[T]) {
 func (s Set[T]) Contains(item T) bool {
 	_, ok := s[item]
 	return ok
-}
-
-// ContainsAll returns true if all the items are contained in the set
-func (s Set[T]) ContainsAll(items Set[T]) bool {
-	for item := range items {
-		if !s.Contains(item) {
-			return false
-		}
-	}
-	return true
 }
 
 // Sorted returns a sorted slice based on the comparator, e.g. s.Sorted(strings.Compare)

@@ -110,68 +110,6 @@ func TestAdd(t *testing.T) {
 	}
 }
 
-func TestAddAll(t *testing.T) {
-	tests := []struct {
-		name          string
-		initial       []int
-		toAdd         []int
-		expectedSize  int
-		shouldContain []int
-	}{
-		{
-			name:          "add all from empty set",
-			initial:       []int{1, 2, 3},
-			toAdd:         []int{},
-			expectedSize:  3,
-			shouldContain: []int{1, 2, 3},
-		},
-		{
-			name:          "add all to empty set",
-			initial:       []int{},
-			toAdd:         []int{1, 2, 3},
-			expectedSize:  3,
-			shouldContain: []int{1, 2, 3},
-		},
-		{
-			name:          "add all with no overlap",
-			initial:       []int{1, 2, 3},
-			toAdd:         []int{4, 5, 6},
-			expectedSize:  6,
-			shouldContain: []int{1, 2, 3, 4, 5, 6},
-		},
-		{
-			name:          "add all with overlap",
-			initial:       []int{1, 2, 3},
-			toAdd:         []int{3, 4, 5},
-			expectedSize:  5,
-			shouldContain: []int{1, 2, 3, 4, 5},
-		},
-		{
-			name:          "add all with complete overlap",
-			initial:       []int{1, 2, 3},
-			toAdd:         []int{1, 2, 3},
-			expectedSize:  3,
-			shouldContain: []int{1, 2, 3},
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			s := NewSet(tt.initial...)
-			toAdd := NewSet(tt.toAdd...)
-			s.AddAll(toAdd)
-			if s.Len() != tt.expectedSize {
-				t.Errorf("expected size %d, got %d", tt.expectedSize, s.Len())
-			}
-			for _, item := range tt.shouldContain {
-				if !s.Contains(item) {
-					t.Errorf("set should contain %d", item)
-				}
-			}
-		})
-	}
-}
-
 func TestRemove(t *testing.T) {
 	tests := []struct {
 		name             string
@@ -239,68 +177,6 @@ func TestRemove(t *testing.T) {
 	}
 }
 
-func TestRemoveAll(t *testing.T) {
-	tests := []struct {
-		name             string
-		initial          []int
-		toRemove         []int
-		expectedSize     int
-		shouldContain    []int
-		shouldNotContain []int
-	}{
-		{
-			name:          "remove from empty set",
-			initial:       []int{},
-			toRemove:      []int{1, 2, 3},
-			expectedSize:  0,
-			shouldContain: []int{},
-		},
-		{
-			name:          "remove empty set",
-			initial:       []int{1, 2, 3},
-			toRemove:      []int{},
-			expectedSize:  3,
-			shouldContain: []int{1, 2, 3},
-		},
-		{
-			name:             "remove some items",
-			initial:          []int{1, 2, 3, 4, 5},
-			toRemove:         []int{2, 4},
-			expectedSize:     3,
-			shouldContain:    []int{1, 3, 5},
-			shouldNotContain: []int{2, 4},
-		},
-		{
-			name:             "remove all items",
-			initial:          []int{1, 2, 3},
-			toRemove:         []int{1, 2, 3, 4, 5},
-			expectedSize:     0,
-			shouldNotContain: []int{1, 2, 3},
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			s := NewSet(tt.initial...)
-			toRemove := NewSet(tt.toRemove...)
-			s.RemoveAll(toRemove)
-			if s.Len() != tt.expectedSize {
-				t.Errorf("expected size %d, got %d", tt.expectedSize, s.Len())
-			}
-			for _, item := range tt.shouldContain {
-				if !s.Contains(item) {
-					t.Errorf("set should contain %d", item)
-				}
-			}
-			for _, item := range tt.shouldNotContain {
-				if s.Contains(item) {
-					t.Errorf("set should not contain %d", item)
-				}
-			}
-		})
-	}
-}
-
 func TestContains(t *testing.T) {
 	tests := []struct {
 		name          string
@@ -352,63 +228,6 @@ func TestContains_AfterRemove(t *testing.T) {
 	s.Remove(2)
 	if s.Contains(2) {
 		t.Error("set should not contain item after removing")
-	}
-}
-
-func TestContainsAll(t *testing.T) {
-	tests := []struct {
-		name     string
-		set      []int
-		check    []int
-		expected bool
-	}{
-		{
-			name:     "both empty",
-			set:      []int{},
-			check:    []int{},
-			expected: true,
-		},
-		{
-			name:     "check empty set",
-			set:      []int{1, 2, 3},
-			check:    []int{},
-			expected: true,
-		},
-		{
-			name:     "contains all items",
-			set:      []int{1, 2, 3, 4, 5},
-			check:    []int{2, 3, 4},
-			expected: true,
-		},
-		{
-			name:     "contains exact items",
-			set:      []int{1, 2, 3},
-			check:    []int{1, 2, 3},
-			expected: true,
-		},
-		{
-			name:     "does not contain all items",
-			set:      []int{1, 2, 3},
-			check:    []int{2, 3, 4},
-			expected: false,
-		},
-		{
-			name:     "empty set does not contain items",
-			set:      []int{},
-			check:    []int{1, 2, 3},
-			expected: false,
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			s := NewSet(tt.set...)
-			check := NewSet(tt.check...)
-			result := s.ContainsAll(check)
-			if result != tt.expected {
-				t.Errorf("expected ContainsAll() = %v, got %v", tt.expected, result)
-			}
-		})
 	}
 }
 
