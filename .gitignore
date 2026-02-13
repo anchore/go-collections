@@ -5,6 +5,7 @@
 *.log
 .images
 .tmp/
+.tool/
 *.DS_Store
 coverage.txt
 **/test-fixtures/cache/

@@ -9,31 +9,22 @@ permissions:
   contents: read  # Needed for checkout
 
 jobs:
-
   Static-Analysis:
     name: "Static analysis"
     runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac #v4.0.0
-      with:
-        persist-credentials: false
+      - name: Bootstrap environment
+        uses: anchore/go-make/.github/actions/bootstrap@latest
 
-    - name: Bootstrap environment
-      uses: ./.github/actions/bootstrap
-
-    - name: Run static analysis
-      run: make static-analysis
+      - name: Run static analysis
+        run: make static-analysis
 
   Unit-Test:
     name: "Unit tests"
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac #v4.0.0
-        with:
-          persist-credentials: false
-
       - name: Bootstrap environment
-        uses: ./.github/actions/bootstrap
+        uses: anchore/go-make/.github/actions/bootstrap@latest
 
       - name: Run unit tests
         run: make unit
