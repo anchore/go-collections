@@ -1,39 +1,34 @@
 name: "Validations"
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
   pull_request:
 
 permissions:
-  contents: read  # Needed for checkout
+  contents: read
 
 jobs:
 
   Static-Analysis:
+    # Note: changing this job name requires making the same update in the .github/workflows/release.yaml pipeline
     name: "Static analysis"
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
-    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
-      with:
-        persist-credentials: false
+      # setup checkout, go, go-make, binny, and cache go modules
+      - uses: anchore/go-make/.github/actions/setup@383ef7852b8ae43a30f424896b52479186d2ea4d # v0.1.0
 
-    - name: Bootstrap environment
-      uses: ./.github/actions/bootstrap
-
-    - name: Run static analysis
-      run: make static-analysis
+      - name: Run static analysis
+        run: make static-analysis
 
   Unit-Test:
+    # Note: changing this job name requires making the same update in the .github/workflows/release.yaml pipeline
     name: "Unit tests"
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd #v6.0.2
-        with:
-          persist-credentials: false
-
-      - name: Bootstrap environment
-        uses: ./.github/actions/bootstrap
+      # setup checkout, go, go-make, binny, and cache go modules
+      - uses: anchore/go-make/.github/actions/setup@383ef7852b8ae43a30f424896b52479186d2ea4d # v0.1.0
 
       - name: Run unit tests
         run: make unit
