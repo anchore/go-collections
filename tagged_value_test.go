@@ -112,6 +112,35 @@ func Test_Tags(t *testing.T) {
 	require.Equal(t, expected, values.Tags())
 }
 
+func Test_JoinOmitsDuplicateArguments(t *testing.T) {
+	a1 := NewTaggedValue("a", "first")
+	a2 := NewTaggedValue("a", "second")
+	b := NewTaggedValue("b", "other")
+
+	require.Equal(t, []string{"a"}, TaggedValueSet[string]{}.Join(a1, a2).Values())
+	require.Equal(t, []string{"a", "b"}, TaggedValueSet[string]{}.Join(a1, b, a2).Values())
+	require.Equal(t, []string{"b", "a"}, TaggedValueSet[string]{b}.Join(a1, a2).Values())
+}
+
+func Test_NilInterfaceValues(t *testing.T) {
+	nilSet := TaggedValueSet[any]{NewTaggedValue[any](nil, "nil")}
+	strSet := TaggedValueSet[any]{NewTaggedValue[any]("a", "str")}
+
+	require.True(t, nilSet.HasValue(nil))
+	require.False(t, nilSet.HasValue("a"))
+	require.False(t, strSet.HasValue(nil))
+
+	require.Len(t, nilSet.Join(NewTaggedValue[any](nil, "again")), 1)
+	require.Len(t, nilSet.Join(NewTaggedValue[any]("a", "str")), 2)
+
+	both := TaggedValueSet[any]{
+		NewTaggedValue[any](nil, "keep"),
+		NewTaggedValue[any](nil, "keep"),
+		NewTaggedValue[any]("a", "keep"),
+	}
+	require.Len(t, both.Select("keep"), 2)
+}
+
 func Test_twoStepFilter(t *testing.T) {
 	tag := func(name string, tags ...string) TaggedValue[string] {
 		return NewTaggedValue(name, append([]string{name}, tags...)...)
