@@ -105,7 +105,7 @@ func (t TaggedValueSet[T]) Join(taggedValues ...TaggedValue[T]) TaggedValueSet[T
 	out := make(TaggedValueSet[T], 0, len(t)+len(taggedValues))
 	out = append(out, t...)
 	for _, value := range taggedValues {
-		if t.HasValue(value.Value) {
+		if out.HasValue(value.Value) {
 			continue
 		}
 		out = append(out, value)
@@ -132,6 +132,10 @@ func (t TaggedValueSet[T]) Tags() (tags []string) {
 func isEqual[T any](a, b T) bool {
 	va := reflect.ValueOf(a)
 	vb := reflect.ValueOf(b)
+	// a nil interface value has no type to inspect
+	if !va.IsValid() || !vb.IsValid() {
+		return va.IsValid() == vb.IsValid()
+	}
 	if va.Type().Comparable() && vb.Type().Comparable() {
 		return va.Equal(vb)
 	}
